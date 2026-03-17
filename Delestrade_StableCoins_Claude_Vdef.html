@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Les Stablecoins — Guide Interactif</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0f14;--bg2:#13161e;--bg3:#1a1e2a;
+  --surface:#1f2433;--surface2:#262c3d;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#e8e6e0;--text2:#9a9890;--text3:#5a5854;
+  --blue:#4f9cf9;--green:#7ec8a0;--amber:#f5a623;--red:#e06b6b;
+  --r-md:10px;--r-lg:16px;--r-xl:22px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+/* PROGRESS */
+#progress{position:fixed;top:0;left:0;height:2px;background:var(--blue);z-index:300;width:0;transition:width .1s linear}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,15,20,0.88);backdrop-filter:blur(14px);border-bottom:.5px solid var(--border);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem}
+.nav-logo{font-family:'Fraunces',serif;font-size:17px;color:var(--text)}
+.nav-links{display:flex;gap:1.5rem}
+.nav-links a{font-size:13px;color:var(--text2);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+@media(max-width:600px){.nav-links{display:none}}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;position:relative;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.15;pointer-events:none}
+.orb1{width:520px;height:520px;background:#4f9cf9;top:-120px;left:-120px}
+.orb2{width:420px;height:420px;background:#7ec8a0;bottom:-100px;right:-100px}
+.orb3{width:320px;height:320px;background:#f5a623;top:45%;left:55%;transform:translate(-50%,-50%)}
+.hero-tag{display:inline-block;padding:4px 14px;border-radius:20px;border:.5px solid var(--border2);font-size:12px;color:var(--text2);margin-bottom:1.5rem;letter-spacing:.06em}
+.hero-title{font-family:'Fraunces',serif;font-size:clamp(42px,8vw,84px);font-weight:600;line-height:1.05;letter-spacing:-.03em;margin-bottom:1.5rem;max-width:780px}
+.hero-title em{font-style:italic;color:var(--blue)}
+.hero-sub{font-size:16px;color:var(--text2);max-width:500px;line-height:1.75;margin-bottom:2.5rem}
+.cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{padding:10px 22px;border-radius:var(--r-md);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;transition:all .2s;font-family:inherit;display:inline-block}
+.btn-primary{background:var(--blue);color:#fff;border:none}
+.btn-primary:hover{background:#3d8de8;transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--text2);border:.5px solid var(--border2)}
+.btn-ghost:hover{color:var(--text);border-color:var(--border2)}
+.hero-stats{display:flex;gap:3rem;margin-top:3.5rem;justify-content:center;flex-wrap:wrap}
+.stat-num{font-family:'Fraunces',serif;font-size:30px;color:var(--text)}
+.stat-label{font-size:12px;color:var(--text3);margin-top:3px}
+
+/* SECTION BASE */
+section{padding:5rem 2rem}
+.container{max-width:860px;margin:0 auto}
+.s-tag{font-size:11px;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:.5rem}
+.s-title{font-family:'Fraunces',serif;font-size:clamp(26px,4vw,36px);color:var(--text);margin-bottom:.9rem;letter-spacing:-.02em}
+.s-body{font-size:15px;color:var(--text2);line-height:1.75;max-width:600px;margin-bottom:2rem}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease}
+.reveal.on{opacity:1;transform:none}
+
+/* ── MECHANISM ── */
+.mech-wrap{border:.5px solid var(--border);border-radius:var(--r-xl);overflow:hidden;background:var(--bg2)}
+.mech-controls{padding:1.5rem 2rem;background:var(--surface);border-bottom:.5px solid var(--border);display:flex;flex-direction:column;gap:1rem}
+.ctrl-row{display:flex;align-items:center;gap:1rem}
+.ctrl-label{font-size:13px;color:var(--text2);width:150px;flex-shrink:0}
+input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:var(--surface2);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--blue);cursor:pointer;transition:transform .15s;box-shadow:0 0 0 3px rgba(79,156,249,.2)}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
+.ctrl-val{font-size:13px;font-weight:500;color:var(--blue);min-width:70px;text-align:right}
+.mech-flow{display:flex;align-items:center;justify-content:center;gap:0;padding:2.5rem 1.5rem;flex-wrap:wrap;gap:4px}
+.f-step{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:90px}
+.f-box{width:82px;height:82px;border-radius:var(--r-lg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:.5px solid var(--border2);transition:all .4s}
+.f-box svg{width:26px;height:26px}
+.f-box span{font-size:11px;font-weight:500}
+.f-amount{font-family:'Fraunces',serif;font-size:18px;color:var(--text);margin-top:2px}
+.f-label{font-size:11px;color:var(--text3)}
+.f-arrow{font-size:22px;color:var(--text3);align-self:flex-start;margin-top:28px;flex-shrink:0;padding:0 6px}
+
+/* ── TYPES ── */
+.types-bg{background:var(--bg)}
+.types-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:640px){.types-grid{grid-template-columns:1fr}}
+.t-card{border-radius:var(--r-xl);border:.5px solid var(--border);padding:1.5rem;background:var(--bg2);cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.t-card::after{content:'';position:absolute;inset:0;border-radius:var(--r-xl);opacity:0;transition:opacity .3s;pointer-events:none}
+.t-card.blue::after{background:radial-gradient(circle at 50% 0%,rgba(79,156,249,.13),transparent 65%)}
+.t-card.green::after{background:radial-gradient(circle at 50% 0%,rgba(126,200,160,.13),transparent 65%)}
+.t-card.amber::after{background:radial-gradient(circle at 50% 0%,rgba(245,166,35,.13),transparent 65%)}
+.t-card:hover{transform:translateY(-4px);border-color:var(--border2)}
+.t-card:hover::after{opacity:1}
+.t-icon{font-size:24px;margin-bottom:.75rem}
+.t-name{font-size:15px;font-weight:500;color:var(--text);margin-bottom:.4rem}
+.t-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:.85rem}
+.t-badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500}
+.t-risk{display:flex;align-items:center;gap:7px;margin-top:.6rem;font-size:12px;color:var(--text3)}
+.dots{display:flex;gap:4px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--surface2)}
+.dot.on.b{background:var(--blue)}.dot.on.g{background:var(--green)}.dot.on.a{background:var(--amber)}
+
+/* ── SCHÉMA SVG ── */
+.schema-bg{background:var(--bg3)}
+.schema-wrap{margin-top:2rem;padding:2rem;border:.5px solid var(--border);border-radius:var(--r-xl);background:var(--bg);overflow-x:auto}
+.schema-wrap svg{display:block;margin:0 auto;max-width:100%}
+
+/* ── USAGES TABS ── */
+.usages-bg{background:var(--bg2)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem}
+.tab{padding:7px 16px;border-radius:20px;border:.5px solid var(--border);font-size:13px;color:var(--text2);cursor:pointer;transition:all .2s;font-family:inherit;background:transparent}
+.tab:hover{border-color:var(--border2);color:var(--text)}
+.tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.panel{display:none;border:.5px solid var(--border);border-radius:var(--r-xl);overflow:hidden;animation:fadeUp .3s ease}
+.panel.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.panel-head{padding:1.5rem 2rem;background:var(--surface);border-bottom:.5px solid var(--border);display:flex;align-items:center;gap:1rem}
+.panel-icon{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.panel-head h3{font-size:15px;font-weight:500;color:var(--text)}
+.panel-head p{font-size:13px;color:var(--text2);margin-top:3px;line-height:1.5}
+.panel-stats{padding:1.5rem 2rem;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:500px){.panel-stats{grid-template-columns:1fr}}
+.p-stat{padding:1rem;background:var(--surface);border-radius:var(--r-lg);border:.5px solid var(--border)}
+.p-stat-num{font-family:'Fraunces',serif;font-size:22px;color:var(--text)}
+.p-stat-label{font-size:12px;color:var(--text3);margin-top:2px}
+
+/* ── RISQUES ── */
+.risks-bg{background:var(--bg)}
+.risks-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
+@media(max-width:560px){.risks-grid{grid-template-columns:1fr}}
+.r-card{padding:1.25rem 1.5rem;border-radius:var(--r-lg);border:.5px solid var(--border);background:var(--bg2);position:relative;overflow:hidden;transition:border-color .2s}
+.r-card:hover{border-color:var(--border2)}
+.r-accent{position:absolute;left:0;top:0;bottom:0;width:3px}
+.r-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:.4rem}
+.r-body{font-size:13px;color:var(--text2);line-height:1.6}
+.mica{padding:1.5rem 2rem;border:.5px solid rgba(79,156,249,.3);border-radius:var(--r-xl);background:rgba(79,156,249,.06);display:flex;gap:1.25rem;align-items:flex-start}
+.mica-icon{width:42px;height:42px;border-radius:12px;background:rgba(79,156,249,.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.mica h4{font-size:14px;font-weight:500;color:var(--blue);margin-bottom:.4rem}
+.mica p{font-size:13px;color:var(--text2);line-height:1.65}
+
+/* ── FUTUR TIMELINE ── */
+.future-bg{background:var(--bg)}
+.timeline{margin-top:2.5rem;position:relative;padding-left:2.5rem}
+.timeline::before{content:'';position:absolute;left:19px;top:0;bottom:0;width:1px;background:var(--border)}
+.tl-item{margin-bottom:2.25rem;position:relative}
+.tl-dot{position:absolute;left:-2.5rem;top:0;width:38px;height:38px;border-radius:50%;border:.5px solid var(--border2);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:16px}
+.tl-title{font-size:15px;font-weight:500;color:var(--text);margin-bottom:.4rem}
+.tl-body{font-size:13px;color:var(--text2);line-height:1.65}
+.tl-tag{display:inline-block;margin-top:8px;font-size:11px;padding:2px 10px;border-radius:20px;background:var(--surface2);color:var(--text3)}
+
+footer{background:var(--bg);border-top:.5px solid var(--border);padding:1.5rem 2rem;text-align:center;font-size:13px;color:var(--text3)}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav>
+  <span class="nav-logo">Stablecoins</span>
+  <div class="nav-links">
+    <a href="#mecanisme">Mécanisme</a>
+    <a href="#types">Types</a>
+    <a href="#schema">Mint / Burn</a>
+    <a href="#usages">Usages</a>
+    <a href="#risques">Risques</a>
+    <a href="#futur">Futur</a>
+    <a href="#europe">🇪🇺 Europe</a>
+    <a href="#europe">Europe</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
+  <span class="hero-tag">Cryptomonnaies · Finance numérique · DeFi</span>
+  <h1 class="hero-title">Les <em>stablecoins</em><br>expliqués</h1>
+  <p class="hero-sub">Des cryptomonnaies combinant la stabilité d'une monnaie traditionnelle aux avantages de la blockchain — rapidité, transparence, sans intermédiaire.</p>
+  <div class="cta-row">
+    <a href="#mecanisme" class="btn btn-primary">Explorer le guide</a>
+    <a href="#usages" class="btn btn-ghost">Les usages →</a>
+  </div>
+  <div class="hero-stats">
+    <div><div class="stat-num">~180 Mds $</div><div class="stat-label">Capitalisation totale</div></div>
+    <div><div class="stat-num">3 types</div><div class="stat-label">Principaux modèles</div></div>
+    <div><div class="stat-num">1 ≈ 1 $</div><div class="stat-label">Parité cible</div></div>
+  </div>
+</section>
+
+<!-- MÉCANISME -->
+<section id="mecanisme" style="background:var(--bg2)">
+  <div class="container reveal">
+    <p class="s-tag">02 — Fonctionnement</p>
+    <h2 class="s-title">Comment ça fonctionne ?</h2>
+    <p class="s-body">Pour chaque stablecoin émis (<strong style="font-weight:500;color:var(--text)">mint</strong>), un actif équivalent est détenu en réserve. Ajuste les curseurs pour visualiser le flux en temps réel.</p>
+    <div class="mech-wrap">
+      <div class="mech-controls">
+        <div class="ctrl-row">
+          <span class="ctrl-label">Dépôt en dollars</span>
+          <input type="range" id="dep" min="100" max="10000" value="1000" step="100">
+          <span class="ctrl-val" id="dep-v">1 000 $</span>
+        </div>
+        <div class="ctrl-row">
+          <span class="ctrl-label">Collatéral requis</span>
+          <input type="range" id="col" min="100" max="200" value="100" step="5">
+          <span class="ctrl-val" id="col-v">100 %</span>
+        </div>
+      </div>
+      <div class="mech-flow">
+        <div class="f-step">
+          <div class="f-box" style="background:rgba(79,156,249,.1);border-color:rgba(79,156,249,.3)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#4f9cf9" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <span style="color:var(--blue)">Vous</span>
+          </div>
+          <div class="f-amount" id="fa-user">1 000 $</div>
+          <div class="f-label">à déposer</div>
+        </div>
+        <div class="f-arrow">→</div>
+        <div class="f-step">
+          <div class="f-box" style="background:rgba(126,200,160,.1);border-color:rgba(126,200,160,.3)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#7ec8a0" stroke-width="1.5"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><circle cx="7" cy="14" r="1" fill="#7ec8a0"/></svg>
+            <span style="color:var(--green)">Réserve</span>
+          </div>
+          <div class="f-amount" id="fa-res">1 000 $</div>
+          <div class="f-label">bloquée</div>
+        </div>
+        <div class="f-arrow">→</div>
+        <div class="f-step">
+          <div class="f-box" style="background:rgba(245,166,35,.1);border-color:rgba(245,166,35,.3)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 3"/></svg>
+            <span style="color:var(--amber)">Mint</span>
+          </div>
+          <div class="f-amount" id="fa-mint">1 000</div>
+          <div class="f-label">tokens créés</div>
+        </div>
+        <div class="f-arrow">→</div>
+        <div class="f-step">
+          <div class="f-box" style="background:rgba(79,156,249,.1);border-color:rgba(79,156,249,.3)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#4f9cf9" stroke-width="1.5"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M9 11h6M9 13h6" stroke-linecap="round"/></svg>
+            <span style="color:var(--blue)">USDC</span>
+          </div>
+          <div class="f-amount" id="fa-out">1 000 USDC</div>
+          <div class="f-label">reçus</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TYPES -->
+<section id="types" class="types-bg">
+  <div class="container reveal">
+    <p class="s-tag">03 — Typologies</p>
+    <h2 class="s-title">Les 3 grandes familles</h2>
+    <p class="s-body">Chaque type repose sur un mécanisme de stabilité différent, avec ses propres avantages et niveaux de risque.</p>
+    <div class="types-grid">
+      <div class="t-card blue">
+        <div class="t-icon">🏦</div>
+        <div class="t-name">Adossés à des devises</div>
+        <div class="t-desc">Réserves d'actifs traditionnels (dollars, bons du Trésor). Le modèle le plus répandu et le plus réglementé.</div>
+        <span class="t-badge" style="background:rgba(79,156,249,.15);color:var(--blue)">Tether · USD Coin</span>
+        <div class="t-risk"><span>Risque</span><div class="dots"><div class="dot on b"></div><div class="dot"></div><div class="dot"></div></div><span>Faible</span></div>
+      </div>
+      <div class="t-card green">
+        <div class="t-icon">⛓️</div>
+        <div class="t-name">Adossés à des cryptos</div>
+        <div class="t-desc">Cryptoactifs bloqués dans des smart contracts. Souvent sur-collatéralisés pour absorber la volatilité.</div>
+        <span class="t-badge" style="background:rgba(126,200,160,.15);color:var(--green)">Dai</span>
+        <div class="t-risk"><span>Risque</span><div class="dots"><div class="dot on g"></div><div class="dot on g"></div><div class="dot"></div></div><span>Modéré</span></div>
+      </div>
+      <div class="t-card amber">
+        <div class="t-icon">⚙️</div>
+        <div class="t-name">Algorithmiques</div>
+        <div class="t-desc">Aucune réserve : des algorithmes régulent l'offre/demande. Modèle innovant mais très risqué, déjà marqué par des effondrements.</div>
+        <span class="t-badge" style="background:rgba(245,166,35,.15);color:var(--amber)">TerraUSD ✕</span>
+        <div class="t-risk"><span>Risque</span><div class="dots"><div class="dot on a"></div><div class="dot on a"></div><div class="dot on a"></div></div><span>Élevé</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- SCHÉMA MINT / BURN — diagramme circulaire interactif -->
+<section id="schema" style="background:var(--bg3)">
+<style>
+/* Cycle diagram */
+.cycle-wrap{margin-top:2rem;border:.5px solid var(--border);border-radius:var(--r-xl);overflow:hidden;background:var(--bg2)}
+.cycle-btns{display:flex;border-bottom:.5px solid var(--border)}
+.cy-btn{flex:1;padding:1rem;font-size:14px;font-weight:500;font-family:inherit;background:transparent;border:none;cursor:pointer;transition:all .2s;color:var(--text2)}
+.cy-btn:first-child{border-right:.5px solid var(--border)}
+.cy-btn.mint-active{color:var(--green);background:rgba(126,200,160,.07)}
+.cy-btn.burn-active{color:var(--red);background:rgba(224,107,107,.07)}
+.cycle-diagram{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:0;padding:2rem 1.5rem}
+@media(max-width:600px){.cycle-diagram{grid-template-columns:1fr;gap:1rem;text-align:center}}
+.cy-actor{display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.cy-actor-box{width:90px;height:90px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:.5px solid var(--border2);transition:all .4s}
+.cy-actor-box.hl-green{border-color:rgba(126,200,160,.5);background:rgba(126,200,160,.08)}
+.cy-actor-box.hl-red{border-color:rgba(224,107,107,.5);background:rgba(224,107,107,.08)}
+.cy-actor-emoji{font-size:24px}
+.cy-actor-name{font-size:12px;font-weight:500;color:var(--text);margin-top:2px}
+.cy-center{display:flex;flex-direction:column;align-items:center;gap:12px;padding:0 1rem}
+.cy-arrow-up,.cy-arrow-down{display:flex;flex-direction:column;align-items:center;gap:4px;width:180px}
+@media(max-width:600px){.cy-arrow-up,.cy-arrow-down{width:100%}}
+.cy-arrow-line{height:3px;width:100%;border-radius:2px;position:relative}
+.cy-arrow-line::after{content:'';position:absolute;right:-1px;top:-4px;border-left:8px solid;border-top:5px solid transparent;border-bottom:5px solid transparent}
+.cy-arrow-line.g{background:var(--green)}
+.cy-arrow-line.g::after{border-left-color:var(--green)}
+.cy-arrow-line.r{background:var(--red)}
+.cy-arrow-line.r::after{border-left-color:var(--red)}
+.cy-arrow-line-rev::after{right:auto;left:-1px;border-left:none;border-right:8px solid;transform:none}
+.cy-arrow-line-rev.g::after{border-right-color:var(--green)}
+.cy-arrow-line-rev.r::after{border-right-color:var(--red)}
+.cy-arrow-label{font-size:12px;font-weight:500;padding:3px 12px;border-radius:20px}
+.cy-arrow-label.g{color:var(--green);background:rgba(126,200,160,.1)}
+.cy-arrow-label.r{color:var(--red);background:rgba(224,107,107,.1)}
+.cy-arrow-sub{font-size:11px;color:var(--text3)}
+.cy-steps{padding:0 1.5rem 1.5rem;display:flex;flex-direction:column;gap:8px}
+.cy-step{display:flex;align-items:flex-start;gap:12px;padding:.75rem 1rem;border-radius:var(--r-lg);background:var(--bg);border:.5px solid var(--border);transition:border-color .3s}
+.cy-step.g{border-left:2px solid rgba(126,200,160,.5)}
+.cy-step.r{border-left:2px solid rgba(224,107,107,.5)}
+.cy-step-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;margin-top:1px}
+.cy-step.g .cy-step-num{background:rgba(126,200,160,.15);color:var(--green)}
+.cy-step.r .cy-step-num{background:rgba(224,107,107,.15);color:var(--red)}
+.cy-step-label{font-size:13px;color:var(--text2);line-height:1.5}
+.cy-step-label strong{color:var(--text);font-weight:500;display:block;margin-bottom:1px}
+.cy-result{margin:0 1.5rem 1.5rem;padding:.85rem 1.25rem;border-radius:var(--r-lg);font-size:13px;font-weight:500;text-align:center}
+.cy-result.g{background:rgba(126,200,160,.07);color:var(--green);border:.5px solid rgba(126,200,160,.2)}
+.cy-result.r{background:rgba(224,107,107,.07);color:var(--red);border:.5px solid rgba(224,107,107,.2)}
+.cy-balance{margin:0 1.5rem 1.5rem;padding:1rem 1.5rem;border:.5px solid rgba(79,156,249,.2);border-radius:var(--r-lg);background:rgba(79,156,249,.05);display:flex;gap:12px;align-items:center}
+.cy-balance-icon{font-size:20px;flex-shrink:0}
+.cy-balance-text{font-size:13px;color:var(--text2);line-height:1.55}
+.cy-balance-text strong{color:var(--blue);font-weight:500}
+</style>
+
+  <div class="container reveal">
+    <p class="s-tag">03b — Schéma interactif</p>
+    <h2 class="s-title">Le cycle Mint / Burn</h2>
+    <p class="s-body">Clique sur <strong style="color:var(--green);font-weight:500">MINT</strong> ou <strong style="color:var(--red);font-weight:500">BURN</strong> pour voir étape par étape comment les tokens sont créés ou détruits.</p>
+
+    <div class="cycle-wrap">
+      <!-- Toggle -->
+      <div class="cycle-btns">
+        <button class="cy-btn mint-active" id="btn-mint" onclick="showCycle('mint')">🌱 MINT — Dollars → Tokens</button>
+        <button class="cy-btn" id="btn-burn" onclick="showCycle('burn')">🔥 BURN — Tokens → Dollars</button>
+      </div>
+
+      <!-- Actors diagram -->
+      <div class="cycle-diagram">
+        <div class="cy-actor" id="actor-left">
+          <div class="cy-actor-box hl-green" id="box-left">
+            <span class="cy-actor-emoji">👤</span>
+            <span class="cy-actor-name">Toi</span>
+          </div>
+          <div id="label-left" style="font-size:12px;color:var(--text2);text-align:center;max-width:120px;line-height:1.4;margin-top:.4rem">Tu envoies <strong style="color:var(--green)">des dollars</strong> à l'émetteur</div>
+        </div>
+
+        <div class="cy-center">
+          <div class="cy-arrow-up">
+            <div class="cy-arrow-label g" id="label-top">dollars</div>
+            <div class="cy-arrow-sub">→</div>
+            <div class="cy-arrow-line g" id="line-top"></div>
+          </div>
+          <div style="width:56px;height:56px;border-radius:50%;background:var(--surface);border:.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px">
+            <span style="font-size:18px">🏦</span>
+          </div>
+          <div class="cy-arrow-down">
+            <div class="cy-arrow-line g cy-arrow-line-rev" id="line-bot"></div>
+            <div class="cy-arrow-sub">←</div>
+            <div class="cy-arrow-label g" id="label-bot">tokens USDC</div>
+          </div>
+        </div>
+
+        <div class="cy-actor" id="actor-right">
+          <div class="cy-actor-box hl-green" id="box-right">
+            <span class="cy-actor-emoji">🔗</span>
+            <span class="cy-actor-name">Blockchain</span>
+          </div>
+          <div id="label-right" style="font-size:12px;color:var(--text2);text-align:center;max-width:120px;line-height:1.4;margin-top:.4rem">Smart contract <strong style="color:var(--green)">crée</strong> les tokens</div>
+        </div>
+      </div>
+
+      <!-- Steps -->
+      <div class="cy-steps" id="cy-steps"></div>
+
+      <!-- Result -->
+      <div class="cy-result g" id="cy-result">Dollars → <strong>USDC créés ✓</strong></div>
+
+      <!-- Balance note -->
+      <div class="cy-balance">
+        <div class="cy-balance-icon">⚖️</div>
+        <div class="cy-balance-text"><strong>Pourquoi le prix reste stable ?</strong> À tout moment, chaque USDC en circulation correspond exactement à 1 dollar bloqué en réserve. Mint et Burn maintiennent cet équilibre permanent.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USAGES -->
+<section id="usages" class="usages-bg">
+  <div class="container reveal">
+    <p class="s-tag">04 — Usages</p>
+    <h2 class="s-title">À quoi servent-ils ?</h2>
+    <p class="s-body">Les stablecoins jouent un rôle central dans l'écosystème crypto. Clique sur un usage pour en savoir plus.</p>
+    <div class="tabs">
+      <button class="tab on" onclick="showTab('ex',this)">💱 Échange</button>
+      <button class="tab" onclick="showTab('defi',this)">🏗️ DeFi</button>
+      <button class="tab" onclick="showTab('pay',this)">🌐 Paiements</button>
+      <button class="tab" onclick="showTab('rsv',this)">🛡️ Réserve</button>
+    </div>
+    <div class="panel on" id="p-ex">
+      <div class="panel-head"><div class="panel-icon" style="background:rgba(79,156,249,.15)">💱</div><div><h3>Moyen d'échange</h3><p>Passer d'un actif crypto à un autre sans repasser par la monnaie traditionnelle. Incontournable sur les plateformes d'échange.</p></div></div>
+      <div class="panel-stats"><div class="p-stat"><div class="p-stat-num">~60 %</div><div class="p-stat-label">du volume de trading crypto</div></div><div class="p-stat"><div class="p-stat-num">&lt; 1 min</div><div class="p-stat-label">temps de règlement moyen</div></div></div>
+    </div>
+    <div class="panel" id="p-defi">
+      <div class="panel-head"><div class="panel-icon" style="background:rgba(126,200,160,.15)">🏗️</div><div><h3>Finance décentralisée (DeFi)</h3><p>Prêt, emprunt, yield farming, liquidités sur les DEX. Les stablecoins sont l'unité de compte de la DeFi.</p></div></div>
+      <div class="panel-stats"><div class="p-stat"><div class="p-stat-num">~50 Mds $</div><div class="p-stat-label">verrouillés dans la DeFi (TVL)</div></div><div class="p-stat"><div class="p-stat-num">2 – 8 %</div><div class="p-stat-label">rendements annuels typiques</div></div></div>
+    </div>
+    <div class="panel" id="p-pay">
+      <div class="panel-head"><div class="panel-icon" style="background:rgba(245,166,35,.15)">🌐</div><div><h3>Paiements internationaux</h3><p>Virements transfrontaliers plus rapides et bien moins coûteux que les circuits bancaires classiques (SWIFT, Western Union…).</p></div></div>
+      <div class="panel-stats"><div class="p-stat"><div class="p-stat-num">~1 %</div><div class="p-stat-label">de frais vs 3–7 % en virement classique</div></div><div class="p-stat"><div class="p-stat-num">24/7</div><div class="p-stat-label">disponibilité des transferts</div></div></div>
+    </div>
+    <div class="panel" id="p-rsv">
+      <div class="panel-head"><div class="panel-icon" style="background:rgba(224,107,107,.15)">🛡️</div><div><h3>Réserve de valeur temporaire</h3><p>Se mettre en sécurité pendant une baisse des marchés sans quitter l'écosystème crypto ni attendre les délais bancaires.</p></div></div>
+      <div class="panel-stats"><div class="p-stat"><div class="p-stat-num">0 %</div><div class="p-stat-label">de volatilité cible</div></div><div class="p-stat"><div class="p-stat-num">Instantané</div><div class="p-stat-label">conversion depuis/vers crypto</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- RISQUES -->
+<section id="risques" class="risks-bg">
+  <div class="container reveal">
+    <p class="s-tag">05 — Enjeux</p>
+    <h2 class="s-title">Risques et régulation</h2>
+    <p class="s-body">Malgré leurs avantages, les stablecoins présentent des risques structurels surveillés de près par les régulateurs.</p>
+    <div class="risks-grid">
+      <div class="r-card"><div class="r-accent" style="background:var(--red)"></div><div class="r-title">Qualité des réserves</div><div class="r-body">Si les actifs détenus manquent de liquidité ou de transparence, un bank-run peut faire chuter le peg en quelques heures.</div></div>
+      <div class="r-card"><div class="r-accent" style="background:var(--amber)"></div><div class="r-title">Risques systémiques</div><div class="r-body">Une adoption massive pourrait déstabiliser le système financier mondial et concurrencer les dépôts bancaires classiques.</div></div>
+      <div class="r-card"><div class="r-accent" style="background:var(--blue)"></div><div class="r-title">Défaillances algorithmiques</div><div class="r-body">L'effondrement de TerraUSD en 2022 a effacé ~40 Mds $ en quelques jours, illustrant la fragilité des modèles sans réserves.</div></div>
+      <div class="r-card"><div class="r-accent" style="background:var(--green)"></div><div class="r-title">Risque de contrepartie</div><div class="r-body">Les émetteurs centralisés peuvent bloquer des fonds, faire faillite ou subir des sanctions réglementaires.</div></div>
+    </div>
+    <div class="mica">
+      <div class="mica-icon">⚖️</div>
+      <div><h4>Règlement MiCA (Europe, 2024)</h4><p>MiCA impose aux émetteurs des exigences strictes : réserves auditées, transparence des actifs, gouvernance renforcée et obligations de rachat. C'est le cadre réglementaire le plus complet au monde à ce jour.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FUTUR -->
+<section id="futur" class="future-bg">
+  <div class="container reveal">
+    <p class="s-tag">06 — Perspectives</p>
+    <h2 class="s-title">L'avenir des stablecoins</h2>
+    <p class="s-body">Leur développement dépendra de la régulation, de la confiance des utilisateurs et de l'intégration avec les institutions traditionnelles.</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot">💳</div><div class="tl-title">Paiements numériques grand public</div><div class="tl-body">PayPal a lancé son stablecoin PYUSD. D'autres géants de la tech et de la finance explorent des projets similaires pour les transactions du quotidien.</div><span class="tl-tag">Court terme</span></div>
+      <div class="tl-item"><div class="tl-dot">🏛️</div><div class="tl-title">Coexistence avec les CBDC</div><div class="tl-body">Les banques centrales développent leurs propres monnaies numériques (euro numérique, e-yuan…). Stablecoins privés et CBDC pourraient coexister avec des rôles complémentaires.</div><span class="tl-tag">Moyen terme</span></div>
+      <div class="tl-item" style="margin-bottom:0"><div class="tl-dot">🌐</div><div class="tl-title">Infrastructure financière mondiale</div><div class="tl-body">À long terme, les stablecoins pourraient devenir une couche de règlement neutre pour les paiements transfrontaliers, les contrats programmables et les nouveaux services financiers décentralisés.</div><span class="tl-tag">Long terme</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- EUROPE -->
+<section id="europe" style="background:var(--bg2)">
+<style>
+.eu-hero{padding:2rem;border:.5px solid var(--border);border-radius:var(--r-xl);background:linear-gradient(135deg,rgba(79,156,249,.07) 0%,rgba(126,200,160,.07) 100%);border-color:rgba(79,156,249,.2);display:flex;align-items:center;gap:1.5rem;margin-bottom:2rem;flex-wrap:wrap}
+.eu-flag{font-size:48px;flex-shrink:0}
+.eu-hero-text h3{font-family:'Fraunces',serif;font-size:22px;color:var(--text);margin-bottom:.4rem;letter-spacing:-.01em}
+.eu-hero-text p{font-size:14px;color:var(--text2);line-height:1.65;max-width:560px}
+.eu-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:2rem}
+@media(max-width:600px){.eu-grid{grid-template-columns:1fr}}
+.eu-card{padding:1.5rem;border-radius:var(--r-xl);border:.5px solid var(--border);background:var(--bg);position:relative;overflow:hidden;transition:border-color .25s,transform .25s}
+.eu-card:hover{border-color:var(--border2);transform:translateY(-3px)}
+.eu-card-glow{position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r-xl) var(--r-xl) 0 0}
+.eu-card-icon{font-size:26px;margin-bottom:.85rem}
+.eu-card-title{font-size:15px;font-weight:500;color:var(--text);margin-bottom:.5rem}
+.eu-card-body{font-size:13px;color:var(--text2);line-height:1.65}
+.eu-card-stat{margin-top:.85rem;padding:.6rem 1rem;border-radius:var(--r-md);font-size:12px;font-weight:500}
+.eu-bottom{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.eu-bottom{grid-template-columns:1fr}}
+.eu-quote{padding:1.5rem;border-radius:var(--r-xl);border:.5px solid rgba(79,156,249,.25);background:rgba(79,156,249,.05)}
+.eu-quote-text{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:var(--text);line-height:1.6;margin-bottom:.75rem}
+.eu-quote-source{font-size:12px;color:var(--text3)}
+.eu-cta-box{padding:1.5rem;border-radius:var(--r-xl);border:.5px solid rgba(126,200,160,.25);background:rgba(126,200,160,.05);display:flex;flex-direction:column;justify-content:space-between;gap:1rem}
+.eu-cta-box h4{font-size:15px;font-weight:500;color:var(--text);margin-bottom:.4rem}
+.eu-cta-box p{font-size:13px;color:var(--text2);line-height:1.6}
+.eu-pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:.75rem}
+.eu-pill{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500}
+</style>
+  <div class="container reveal">
+    <p class="s-tag">07 — Europe &amp; Stablecoins</p>
+    <h2 class="s-title">Pourquoi l'Europe doit accélérer</h2>
+    <p class="s-body">Alors que les États-Unis dominent le marché des stablecoins, l'Europe dispose d'atouts uniques pour s'imposer comme leader mondial — à condition d'agir maintenant.</p>
+
+    <div class="eu-hero">
+      <div class="eu-flag">🇪🇺</div>
+      <div class="eu-hero-text">
+        <h3>Un continent sous-représenté dans la révolution des stablecoins</h3>
+        <p>Aujourd'hui, plus de 95 % des stablecoins en circulation sont libellés en dollars américains. L'Europe, pourtant première puissance commerciale mondiale et berceau du règlement MiCA, reste en retrait. C'est à la fois un risque et une opportunité historique.</p>
+      </div>
+    </div>
+
+    <div class="eu-grid">
+      <div class="eu-card">
+        <div class="eu-card-glow" style="background:var(--blue)"></div>
+        <div class="eu-card-icon">🏗️</div>
+        <div class="eu-card-title">Souveraineté financière</div>
+        <div class="eu-card-body">Dépendre de stablecoins en dollars expose l'Europe aux décisions monétaires américaines et aux sanctions extraterritoriales. Des stablecoins en euros permettraient de reprendre le contrôle sur les flux de paiements numériques au sein du marché unique.</div>
+        <div class="eu-card-stat" style="background:rgba(79,156,249,.08);color:var(--blue)">450 M de citoyens · 1er marché unique au monde</div>
+      </div>
+
+      <div class="eu-card">
+        <div class="eu-card-glow" style="background:var(--green)"></div>
+        <div class="eu-card-icon">⚡</div>
+        <div class="eu-card-title">Paiements instantanés &amp; moins coûteux</div>
+        <div class="eu-card-body">Les virements transfrontaliers en zone euro coûtent encore jusqu'à 7 % en frais. Un stablecoin euro natif réduirait ces frictions à moins de 1 %, accélérant les échanges commerciaux et bénéficiant directement aux PME exportatrices.</div>
+        <div class="eu-card-stat" style="background:rgba(126,200,160,.08);color:var(--green)">Économies estimées : &gt;20 Mds € / an pour les entreprises</div>
+      </div>
+
+      <div class="eu-card">
+        <div class="eu-card-glow" style="background:var(--amber)"></div>
+        <div class="eu-card-icon">📋</div>
+        <div class="eu-card-title">MiCA : une avance réglementaire décisive</div>
+        <div class="eu-card-body">Avec MiCA, l'Europe est la seule région au monde à disposer d'un cadre légal clair pour les stablecoins. Cet avantage réglementaire attire les émetteurs sérieux et rassure les investisseurs institutionnels — une fenêtre d'opportunité à saisir avant que d'autres régions comblent leur retard.</div>
+        <div class="eu-card-stat" style="background:rgba(245,166,35,.08);color:var(--amber)">MiCA en vigueur depuis 2024 — unique au monde</div>
+      </div>
+
+      <div class="eu-card">
+        <div class="eu-card-glow" style="background:#b07ef5"></div>
+        <div class="eu-card-icon">🌍</div>
+        <div class="eu-card-title">Inclusion financière &amp; aide internationale</div>
+        <div class="eu-card-body">Un euro numérique stable et accessible faciliterait l'aide humanitaire, les transferts de fonds vers les pays en développement et l'inclusion des 10 % d'Européens sans accès bancaire complet. La blockchain permet d'atteindre directement les bénéficiaires sans intermédiaires coûteux.</div>
+        <div class="eu-card-stat" style="background:rgba(176,126,245,.1);color:#b07ef5">~40 M d'Européens sous-bancarisés</div>
+      </div>
+    </div>
+
+    <div class="eu-bottom">
+      <div class="eu-quote">
+        <div class="eu-quote-text">"L'euro numérique et les stablecoins privés ne sont pas concurrents — ils sont complémentaires. L'Europe a besoin des deux pour rester souveraine dans la finance de demain."</div>
+        <div class="eu-quote-source">— Perspective issue du rapport Letta sur le marché unique, 2024</div>
+        <div class="eu-pills" style="margin-top:1rem">
+          <span class="eu-pill" style="background:rgba(79,156,249,.1);color:var(--blue)">Rapport Letta</span>
+          <span class="eu-pill" style="background:rgba(79,156,249,.1);color:var(--blue)">MiCA 2024</span>
+          <span class="eu-pill" style="background:rgba(79,156,249,.1);color:var(--blue)">BCE</span>
+        </div>
+      </div>
+
+      <div class="eu-cta-box">
+        <div>
+          <h4>Les conditions sont réunies</h4>
+          <p>L'Europe a le cadre légal (MiCA), la taille de marché (450 M d'habitants), la monnaie (euro, 2ème devise mondiale) et les institutions (BCE, BEI). Il manque aujourd'hui la volonté d'accélérer et des acteurs privés ambitieux pour émettre des stablecoins en euros à grande échelle.</p>
+        </div>
+        <div class="eu-pills">
+          <span class="eu-pill" style="background:rgba(126,200,160,.1);color:var(--green)">✓ Cadre MiCA</span>
+          <span class="eu-pill" style="background:rgba(126,200,160,.1);color:var(--green)">✓ Marché unique</span>
+          <span class="eu-pill" style="background:rgba(126,200,160,.1);color:var(--green)">✓ Euro solide</span>
+          <span class="eu-pill" style="background:rgba(245,166,35,.1);color:var(--amber)">⏳ Acteurs à mobiliser</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>Finance numérique · Blockchain · DeFi — Guide interactif sur les stablecoins</footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll',()=>{
+  const s=document.documentElement;
+  document.getElementById('progress').style.width=(s.scrollTop/(s.scrollHeight-s.clientHeight)*100)+'%';
+});
+
+// Scroll reveal
+const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+// Mechanism
+function fmt(n){return n.toLocaleString('fr-FR')}
+function mechUpdate(){
+  const d=+document.getElementById('dep').value;
+  const c=+document.getElementById('col').value;
+  const t=Math.floor(d/(c/100));
+  document.getElementById('dep-v').textContent=fmt(d)+' $';
+  document.getElementById('col-v').textContent=c+' %';
+  document.getElementById('fa-user').textContent=fmt(d)+' $';
+  document.getElementById('fa-res').textContent=fmt(d)+' $';
+  document.getElementById('fa-mint').textContent=fmt(t);
+  document.getElementById('fa-out').textContent=fmt(t)+' USDC';
+}
+document.getElementById('dep').addEventListener('input',mechUpdate);
+document.getElementById('col').addEventListener('input',mechUpdate);
+
+// Tabs
+function showTab(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('p-'+id).classList.add('on');
+  btn.classList.add('on');
+}
+
+// Cycle Mint/Burn
+const mintSteps=[
+  {t:'Réception des fonds',b:"L'émetteur reçoit et vérifie tes dollars."},
+  {t:'Mise en réserve',b:'Les dollars sont bloqués dans un compte sécurisé.'},
+  {t:'Création on-chain',b:'Le smart contract génère les USDC sur la blockchain.'},
+  {t:'Envoi dans ton wallet',b:'Les tokens arrivent instantanément chez toi.'}
+];
+const burnSteps=[
+  {t:'Envoi des tokens',b:'Tu renvoies tes USDC au smart contract de l\'émetteur.'},
+  {t:'Destruction des tokens',b:'Le smart contract brûle les USDC — ils disparaissent de la blockchain.'},
+  {t:'Déblocage des réserves',b:'L\'émetteur libère les dollars correspondants.'},
+  {t:'Virement bancaire',b:'Tu reçois tes dollars sur ton compte. Cycle terminé.'}
+];
+function showCycle(mode){
+  const isMint=mode==='mint';
+  const steps=isMint?mintSteps:burnSteps;
+  const cls=isMint?'g':'r';
+  const color=isMint?'var(--green)':'var(--red)';
+  const hlClass=isMint?'hl-green':'hl-red';
+  document.getElementById('btn-mint').className='cy-btn'+(isMint?' mint-active':'');
+  document.getElementById('btn-burn').className='cy-btn'+(isMint?'':' burn-active');
+  document.getElementById('box-left').className='cy-actor-box '+hlClass;
+  document.getElementById('box-right').className='cy-actor-box '+hlClass;
+  if(isMint){
+    document.getElementById('label-left').innerHTML='Tu envoies <strong style="color:var(--green)">des dollars</strong> à l\'émetteur';
+    document.getElementById('label-right').innerHTML='Smart contract <strong style="color:var(--green)">crée</strong> les tokens';
+    document.querySelector('#actor-right .cy-actor-emoji').textContent='🔗';
+    document.querySelector('#actor-right .cy-actor-name').textContent='Blockchain';
+    document.getElementById('cy-result').className='cy-result g';
+    document.getElementById('cy-result').innerHTML='Dollars → <strong>USDC créés ✓</strong>';
+  } else {
+    document.getElementById('label-left').innerHTML='Tu renvoies <strong style="color:var(--red)">tes USDC</strong> au smart contract';
+    document.getElementById('label-right').innerHTML='Smart contract <strong style="color:var(--red)">détruit</strong> les tokens';
+    document.querySelector('#actor-right .cy-actor-emoji').textContent='🏦';
+    document.querySelector('#actor-right .cy-actor-name').textContent='Émetteur';
+    document.getElementById('cy-result').className='cy-result r';
+    document.getElementById('cy-result').innerHTML='USDC détruits → <strong>Dollars restitués ✓</strong>';
+  }
+  const container=document.getElementById('cy-steps');
+  container.innerHTML=steps.map((s,i)=>`<div class="cy-step ${cls}"><div class="cy-step-num">${i+1}</div><div class="cy-step-label"><strong>${s.t} — </strong>${s.b}</div></div>`).join('');
+  document.getElementById('line-top').className='cy-arrow-line '+(isMint?'g':'r');
+  document.getElementById('line-bot').className='cy-arrow-line cy-arrow-line-rev '+(isMint?'g':'r');
+  document.getElementById('label-top').className='cy-arrow-label '+(isMint?'g':'r');
+  document.getElementById('label-top').textContent=isMint?'dollars':'tokens USDC';
+  document.getElementById('label-bot').className='cy-arrow-label '+(isMint?'g':'r');
+  document.getElementById('label-bot').textContent=isMint?'tokens USDC':'dollars';
+}
+showCycle('mint');
+</script>
+</body>
+</html>
